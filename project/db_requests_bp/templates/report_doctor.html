@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Страница отчетов по пациентам врача</h1>
+</div>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-8">
+                {% if report.doctor %}
+                <h3 class="fw-bold">Отчет по варчу {{ report.doctor }}</h3>
+                <div class="mt-5 row row-cols-1 row-cols-md-3 g-4" style="width = 100%;">
+                    {% for note in report.notes %}
+                    {% include "include/report_card.html" %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if not report.doctor %}
+                <h3 class="fw-bold">Пожалуйста, выберете врача</h3>
+                {% endif %}
+        </div>
+        <div class="col-4">
+            <div class="text-center pb-4">
+                <h5>Пожалуйста, выберете врача, по которому необходимо сформировать отчет</h5>
+            </div>
+            <form action="" method="get">
+                <select name="doctor_select" class="form-select" aria-label="Default select example">
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor }}">{{ doctor }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="submit" class="mt-4 btn btn-success" value="Отправить">
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Страница отчетов по пациентам врача</h1>
+</div>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-8">
+            {% if not changed_notes %}
+            <h3 class="fw-bold">Пожалуйста, задайте парметры поиска</h3>
+            {%endif%}
+
+            {% if changed_notes %}
+            {% for note in changed_notes %}
+            <div class="card m-5">
+                <div class="card-body">
+                    <div class="col-6">
+                        Номер записи: {{ note[0] }}
+                    </div>
+                        Фамилия пациента: {{ note[1] }}
+                    <div class="col-6">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-4">
+            <div class="text-center pb-4">
+                <h5>Фильтр:</h5>
+            </div>
+            <form action="" method="get">
+                <div class="mt-4">
+                    Врач:
+                    <select name="doctor" class="form-select" aria-label="Default select example">
+                        {% for doctor in doctors %}
+                        <option value="{{ doctor }}">{{ doctor }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mt-4">
+                    Месяц:
+                    <select name="month" class="form-select" aria-label="Default select example">
+                        {% for month in months %}
+                        <option value="{{ month.num }}">{{ month.month }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mt-4">
+                    Год:
+                    <select name="year" class="form-select" aria-label="Default select example">
+                        {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <input type="submit" class="mt-4 btn btn-success" value="Отправить">
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

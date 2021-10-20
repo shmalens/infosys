@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Информационная система "История болезни"</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Страничка с главным меню</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <form action="/requests">
+                <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Перейти к запросам</button>
+            </form>
+            <form action="/" method="get">
+                <input type="hidden" name="end_work" value="end">
+                <button type="submit" class="btn btn-outline-secondary btn-lg px-4">Завершить работу</button>
+            </form>
+        </div>
+    </div>
+
+    {% if end_work %}
+    <div class="card text-white bg-primary mb-3 position-absolute top-50 start-50 translate-middle" style="max-width: 18rem;">
+        <div class="card-header">До свидания</div>
+        <div class="card-body">
+            <h5 class="card-title">До свидания</h5>
+            <p class="card-text">До свидания</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
