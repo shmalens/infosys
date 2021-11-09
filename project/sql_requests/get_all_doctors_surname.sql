@@ -1,0 +1,1 @@
+SELECT surname FROM Doctors;

@@ -1,0 +1,21 @@
+<div class="card mt-3">
+    <div class="card-header">
+        {{ doc[1] }} {{ doc[2] }} {{ doc[3] }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Данные о враче</h5>
+        <p class="card-text">Специальность: {{ doc[4] }}</p>
+        <p class="card-text">Номер отделения: {{ doc[5] }}</p>
+        {% if doc[6] %}
+        <p class="card-text">Дата приема на работу: {{ doc[6] }}</p>
+        {% else %}
+        <p class="card-text">Данные о дате приема на работу не представлены</p>
+        {% endif %}
+
+        {% if doc[7] %}
+        <p class="card-text">Дата увольнения: {{ doc[7] }}</p>
+        {% else %}
+        <p class="card-text">Данные о дате увольнения не представлены</p>
+        {% endif %}
+    </div>
+</div>

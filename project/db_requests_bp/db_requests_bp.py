@@ -1,8 +1,7 @@
-from datetime import date
+from flask import Blueprint, render_template, request
 
-from flask import Blueprint, render_template, request, url_for
-from project.launch import sql_provider, DB_CONFIG
-from project.db_processing.db_access import DBConnector
+from db_processing.db_access import db_get_data
+from launch import sql_provider
 
 service = Blueprint('requests', __name__, template_folder='templates')
 
@@ -12,71 +11,40 @@ def blueprint_interface_menu():
     return render_template('requests_main.html')
 
 
-@service.route('/youngest_patient')
+@service.route('/youngest_patient', methods=['GET', 'POST'])
 def blueprint_youngets_patient():
-    sql_req = tuple()
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        cursor.execute(sql_provider.get('youngest_patient.sql'))
-        sql_req = cursor.fetchall()
-        sql_req = {
-            'pat_id': sql_req[0][0],
-            'surname': sql_req[0][1],
-            'name': sql_req[0][2],
-            'second_name': sql_req[0][3],
-            'pasport': sql_req[0][4],
-            'address': sql_req[0][5],
-            'therapist': sql_req[0][6],
-            'birthday': str(sql_req[0][7])
-        }
+    if request.method == 'POST':
+        year = request.form.get('year')
+        sql_req = db_get_data(sql_provider.get('youngest_patient.sql', year=year))
+        print(sql_req)
+    else:
+        sql_req = db_get_data(sql_provider.get('get_all_patients.sql'))
+        print(sql_req)
 
-    return render_template('youngest_patient.html', **sql_req)
+    return render_template('youngest_patient.html', patients=sql_req)
 
 
-@service.route('/last_receipt')
+@service.route('/last_receipt', methods=['GET', 'POST'])
 def blueprint_last_receipt():
-    sql_req = tuple()
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        cursor.execute(sql_provider.get('most_late_receipt_doctor.sql'))
-        sql_req = cursor.fetchall()
-        sql_req = {
-            'doc_id': sql_req[0][0],
-            'surname': sql_req[0][1],
-            'name': sql_req[0][2],
-            'second_name': sql_req[0][3],
-            'specialty': sql_req[0][4],
-            'corpus_no': sql_req[0][5],
-            'date_receipt': str(sql_req[0][6]),
-            'date_dismissal': str(sql_req[0][7]),
-        }
+    if request.method == 'POST':
+        year = request.form.get('year')
+        sql_req = db_get_data(sql_provider.get('most_late_receipt_doctor.sql', year=year))
+    else:
+        sql_req = db_get_data(sql_provider.get('get_all_doctors.sql'))
 
-    return render_template('last_receipt_doctor.html', **sql_req)
+    print(sql_req)
+    return render_template('last_receipt_doctor.html', doctors=sql_req)
 
 
-@service.route('/report_doctor')
+@service.route('/report_doctor', methods=['GET', 'POST'])
 def blueprint_report_doctor():
-    report_doctor = request.args.get('doctor_select', None)
-
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        _SQL = 'SELECT surname FROM Doctors;'
-        cursor.execute(_SQL)
-        notes = cursor.fetchall()
-    notes = {note[0] for note in notes}
-
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        if report_doctor is None:
-            sql_req = {'doctor': None, 'notes': tuple()}
-        else:
-            cursor.execute(sql_provider.get('report_doctor_xxx.sql', doctor_name=report_doctor))
-            sql_req = {'doctor': report_doctor, 'notes': cursor.fetchall()}
-
+    if request.method == 'POST':
+        report_doctor = request.form.get('doctor_select')
+        sql_req = {'doctor': report_doctor,
+                   'notes': db_get_data(sql_provider.get('report_doctor_xxx.sql', doctor_name=report_doctor))}
+    else:
+        sql_req = {'doctor': None, 'notes': tuple()}
+    notes = {note[0] for note in db_get_data(sql_provider.get('get_all_doctors_surname.sql'))}
     return render_template('report_doctor.html', doctors=tuple(notes), report=sql_req)
 
 
@@ -98,28 +66,17 @@ months = [
 years = range(1970, 2022)
 
 
-@service.route('/notes_changed')
+@service.route('/notes_changed', methods=['GET', 'POST'])
 def blueprint_notes_changed():
-    report_doctor = request.args.get('doctor', None)
-    year = request.args.get('year', None)
-    month = request.args.get('month', None)
+    notes = {note[0] for note in db_get_data(sql_provider.get('get_all_doctors_surname.sql'))}
+    if request.method == 'POST':
+        report_doctor = request.form.get('doctor')
+        year = request.form.get('year')
+        month = request.form.get('month')
+        sql_req = db_get_data(
+            sql_provider.get('notes_in_xxx_year_by_xxx_doc.sql', doctor_name=report_doctor, year=year, month=month))
+    else:
+        sql_req = None
 
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        _SQL = 'SELECT surname FROM Doctors;'
-        cursor.execute(_SQL)
-        notes = cursor.fetchall()
-    notes = {note[0] for note in notes}
-
-    with DBConnector(DB_CONFIG) as cursor:
-        if cursor is None:
-            raise ValueError('cursor')
-        if report_doctor is None:
-            sql_req = None
-        else:
-            cursor.execute(sql_provider.get('notes_in_xxx_year_by_xxx_doc.sql', doctor_name=report_doctor, year=year, month=month))
-            sql_req = cursor.fetchall()
-        print(sql_req)
-
-    return render_template('changed_notes.html', doctors=tuple(notes), months=months, years=years, changed_notes=sql_req)
+    return render_template('changed_notes.html', doctors=tuple(notes), months=months, years=years,
+                           changed_notes=sql_req)

@@ -1,5 +1,5 @@
 import pymysql
-
+from launch import DB_CONFIG
 
 class DBConnector:
     """
@@ -50,6 +50,14 @@ class DBConnector:
         elif exc_value.args[0] == 1054:
             print('Wrong field name')
         return True
+
+
+def db_get_data(_sql):
+    with DBConnector(DB_CONFIG) as cursor:
+        if cursor is None:
+            raise ValueError('empty_cursor')
+        cursor.execute(_sql)
+        return cursor.fetchall()
 
 
 if __name__ == '__main__':

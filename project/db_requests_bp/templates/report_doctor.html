@@ -23,7 +23,7 @@
             <div class="text-center pb-4">
                 <h5>Пожалуйста, выберете врача, по которому необходимо сформировать отчет</h5>
             </div>
-            <form action="" method="get">
+            <form action="" method="post">
                 <select name="doctor_select" class="form-select" aria-label="Default select example">
                     {% for doctor in doctors %}
                     <option value="{{ doctor }}">{{ doctor }}</option>

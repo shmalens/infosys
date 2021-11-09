@@ -1,25 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">Результат запроса по врачу, принятому на работу позже других</h1>
-
-    <div class="card mb-3 position-absolute top-50 start-50 translate-middle" style="height: 300px; width: 50%;">
-        <div class="row g-0">
-            <div class="col-md-4 p-3">
-                <img src="https://pbs.twimg.com/media/EJ2FjdcWsAQhSOG.jpg" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title m-5">{{ surname }} {{ name }} {{ second_name }}</h5>
-                    <div class="p-1"><span>Идентификатор: {{ doc_id }}, </span> <span> Специальность: {{ specialty }} </span></div>
-                    <div class="p-1"><span> Номер корпуса: {{ corpus_no }} </span></div>
-                    <div class="p-1"><span> Дата приема на работу: {{ date_receipt }}, </span> <span> Дата увольнения: {{ date_dismissal }} </span></div>
+<div class="px-4 py-5 my-5 h1 text-center">
+    Врачи.
+</div>
+<div class="container w-100">
+    <div class="row">
+        <div class="col-8">
+            {% for doc in doctors %}
+            {% include "include/doctor_card.html" %}
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <form action="" method="post">
+                <div>
+                    <label for="YearInput" class="form-label">Фильтр по году приема на работу</label>
+                    <input class="form-range" name="year" type="range" value="2021" min="1970" max="2022" step="1"
+                           oninput="this.nextElementSibling.value = this.value" id="YearInput">
+                    <output>2021</output>
                 </div>
-            </div>
+
+                <input type="submit" class="mt-4 btn btn-success" value="Отправить">
+            </form>
+
         </div>
     </div>
-
 </div>
+
 
 {% endblock %}

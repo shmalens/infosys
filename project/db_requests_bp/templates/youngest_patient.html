@@ -1,25 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="px-4 py-5 my-5 text-center">
-    <h1 class="display-5 fw-bold">Результат запроса по самому младшемму пациенту</h1>
-
-    <div class="card mb-3 position-absolute top-50 start-50 translate-middle" style="height: 300px; width: 50%;">
-        <div class="row g-0">
-            <div class="col-md-4 p-3">
-                <img src="https://kipmu.ru/wp-content/uploads/nvrzhdglv-1536x1099.jpg" class="img-fluid rounded-start" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title m-5">{{ surname }} {{ name }} {{ second_name }}</h5>
-                    <div><span>Идентификатор: {{ pat_id }}, </span> <span> Дата рождения: {{ birthday }} </span></div>
-                    <div><span> Паспорт: {{ pasport }}, </span> <span> Адрес: {{ address }} </span></div>
-                    <div><span> Идентификатор врача: {{ therapist }} </span></div>
+<div class="px-4 py-5 my-5 h1 text-center">
+    Пациенты.
+</div>
+<div class="container w-100">
+    <div class="row">
+        <div class="col-8">
+            {% for patient in patients %}
+            {% include "include/patient_card.html" %}
+            {% endfor %}
+        </div>
+        <div class="col-4">
+            <form action="" method="post">
+                <div>
+                    <label for="YearInput" class="form-label">Фильтр по году рождения</label>
+                    <input class="form-range" name="year" type="range" value="2021" min="1970" max="2022" step="1"
+                           oninput="this.nextElementSibling.value = this.value" id="YearInput">
+                    <output>2021</output>
                 </div>
-            </div>
+
+                <input type="submit" class="mt-4 btn btn-success" value="Отправить">
+            </form>
+
         </div>
     </div>
-
 </div>
+
 
 {% endblock %}
