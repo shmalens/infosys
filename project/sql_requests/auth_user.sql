@@ -1,0 +1,1 @@
+Select `password`, `role` from Users where `login` = '$login';

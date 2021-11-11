@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="px-4 py-5 my-5 text-center">
+                {% if status %}
+                Вы успешно вышли из учетной записи
+                {% else %}
+                Вы еще не вошли в учетную запись
+                <div>
+                    <a class="btn btn-success mt-3" aria-current="page" href="/login">Войти в учетную запись</a>
+                </div>
+                {% endif %}
+                <div>
+                    <a class="btn btn-primary mt-3" aria-current="page" href="/">В главное меню</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

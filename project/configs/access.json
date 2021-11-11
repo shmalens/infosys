@@ -1,0 +1,31 @@
+{
+  "doctor": [
+    "login_page",
+    "exit_page",
+    "blueprint_interface_menu",
+    "blueprint_youngets_patient",
+    "blueprint_report_doctor"
+  ],
+  "admin": [
+    "login_page",
+    "exit_page",
+    "blueprint_interface_menu",
+    "blueprint_youngets_patient",
+    "blueprint_last_receipt",
+    "blueprint_report_doctor",
+    "blueprint_notes_changed"
+  ],
+  "head_doctor": [
+    "login_page",
+    "exit_page",
+    "blueprint_interface_menu",
+    "blueprint_youngets_patient",
+    "blueprint_last_receipt",
+    "blueprint_report_doctor",
+    "blueprint_notes_changed"
+  ],
+  "unauthorized": [
+    "login_page",
+    "exit_page"
+  ]
+}
